@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 
 import { Button } from "./ui/button";
 
-import { HomeIcon, ClockIcon, AwardIcon, MenuIcon, XIcon } from "lucide-react";
+import {LucideCamera, HomeIcon, ClockIcon, AwardIcon, MenuIcon, XIcon } from "lucide-react";
 import { cn } from "../lib/utils";
+import SearchInput from "./search-input";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,6 +16,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Dashboard", icon: <HomeIcon className="h-5 w-5" />, path: "/" },
+    { name: "Scan Product", icon: <LucideCamera className="h-5 w-5" />, path: "/scan-product" },
     {
       name: "History",
       icon: <ClockIcon className="h-5 w-5" />,
@@ -94,6 +96,7 @@ const Navbar = () => {
                 </Button>
               </Link>
             ))}
+            <SearchInput/>
           </div>
         )}
       </div>
