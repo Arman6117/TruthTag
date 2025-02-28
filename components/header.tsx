@@ -1,8 +1,8 @@
 import React from "react";
+
 import Logo from "./logo";
 import SearchInput from "./search-input";
 import UserAvatar from "./user-avatar";
-
 import Navbar from "./navbar";
 
 const Header = () => {
