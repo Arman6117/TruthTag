@@ -1,21 +1,45 @@
 'use client'
 import React from "react";
 import Webcam from "react-webcam";
-import { useState, useRef } from "react";
-import { Camera, Upload, RotateCcw, Check, Loader2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Camera, Upload, RotateCcw, Check, Loader2, X, Globe, Package2, ShoppingBag } from "lucide-react";
 
-const ScanProduct = () => {
+const ScanProduct = ({ onSubmit }) => {
   const webcamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
+  const [showCamera, setShowCamera] = useState(false);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+  const [cameraPermission, setCameraPermission] = useState('pending');
+  
+  // Form state
+  const [productName, setProductName] = useState('');
+  const [netWeight, setNetWeight] = useState('');
+  const [country, setCountry] = useState('India');
+  
+  // Check camera permission when camera is shown
+  useEffect(() => {
+    if (showCamera) {
+      const checkCameraPermission = async () => {
+        try {
+          await navigator.mediaDevices.getUserMedia({ video: true });
+          setCameraPermission('granted');
+        } catch (err) {
+          setCameraPermission('denied');
+          setShowCamera(false);
+        }
+      };
+      
+      checkCameraPermission();
+    }
+  }, [showCamera]);
 
   const capture = () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
       setCapturedImage(imageSrc);
-      setSelectedImage('');
+      setShowCamera(false);
     }
   };
 
@@ -39,13 +63,37 @@ const ScanProduct = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      // Handle success logic here
-    }, 2000);
+    
+    // Prepare form data
+    const formData = {
+      productName,
+      netWeight,
+      country,
+      image: capturedImage || selectedImage
+    };
+    
+    // Call the provided onSubmit handler
+    if (onSubmit) {
+      onSubmit(formData);
+      
+      // Reset form after submission
+      setTimeout(() => {
+        setLoading(false);
+        setProductName('');
+        setNetWeight('');
+        setCountry('India');
+        resetImages();
+      }, 2000);
+    } else {
+      // If no onSubmit handler is provided, just log and reset loading
+      console.log("Submitting form data:", formData);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
   };
 
   const triggerFileInput = () => {
@@ -53,108 +101,185 @@ const ScanProduct = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-b from-blue-50 to-blue-100 border border-blue-200 shadow-lg p-6 rounded-lg">
-      <h2 className="text-2xl font-bold text-blue-800 mb-6">Product Scanner</h2>
+    <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
+      {/* Header */}
+      <div className="bg-blue-600 text-white p-4">
+        <h2 className="text-xl font-bold flex items-center gap-2">
+          <Camera size={20} />
+          Product Scan Form
+        </h2>
+        <p className="text-blue-100 text-sm mt-1">Add product details and image</p>
+      </div>
       
-      {/* Camera/Preview Container */}
-      <div className="w-full max-w-md bg-white p-4 rounded-lg border border-blue-300 shadow-md mb-6">
-        <div className="relative rounded-lg overflow-hidden bg-blue-900/5">
-          {!capturedImage && !selectedImage ? (
-            <Webcam 
-              ref={webcamRef} 
-              screenshotFormat="image/jpeg" 
-              className="w-full h-64 object-cover rounded-lg"
-            />
-          ) : (
-            <img
-              src={capturedImage || selectedImage}
-              alt="Selected"
-              className="w-full h-64 object-contain rounded-lg"
-            />
-          )}
-          
-          {/* Camera control buttons */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-            {!capturedImage && !selectedImage ? (
+      <form onSubmit={handleSubmit} className="p-4">
+        {/* Camera/Preview Container */}
+        {showCamera ? (
+          <div className="relative rounded-xl overflow-hidden bg-gray-900 mb-4">
+            {cameraPermission === 'granted' ? (
+              <Webcam 
+                ref={webcamRef} 
+                screenshotFormat="image/jpeg" 
+                className="w-full h-64 object-cover"
+                videoConstraints={{
+                  facingMode: "environment"
+                }}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 bg-gray-100 text-gray-500">
+                <p className="text-center px-4">
+                  {cameraPermission === 'denied' 
+                    ? "Camera access was denied. Please enable camera permissions and refresh." 
+                    : "Initializing camera..."}
+                </p>
+              </div>
+            )}
+            
+            {/* Camera controls */}
+            <div className="absolute inset-x-0 bottom-4 flex justify-center space-x-4">
               <button
+                type="button"
+                onClick={() => setShowCamera(false)}
+                className="bg-white p-3 rounded-full text-red-500 shadow-md"
+              >
+                <X size={24} />
+              </button>
+              
+              <button
+                type="button"
                 onClick={capture}
-                className="bg-blue-600 p-3 rounded-full text-white shadow-md hover:bg-blue-700 transition-all transform hover:scale-105"
+                className="bg-blue-600 p-4 rounded-full text-white shadow-md"
               >
                 <Camera size={24} />
               </button>
-            ) : (
-              <button
-                onClick={resetImages}
-                className="bg-blue-600 p-3 rounded-full text-white shadow-md hover:bg-blue-700 transition-all transform hover:scale-105"
-              >
-                <RotateCcw size={24} />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      {/* Controls Section */}
-      <div className="w-full max-w-md flex flex-col gap-4">
-        {/* Upload Section */}
-        <div className="bg-white p-4 rounded-lg border border-blue-300 shadow-md">
-          <p className="text-blue-800 font-medium mb-3">Or upload an image from your device</p>
-          <div className="flex gap-4">
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-            <button
-              onClick={triggerFileInput}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-blue-100 text-blue-800 font-medium rounded-lg hover:bg-blue-200 transition-all border border-blue-200"
-            >
-              <Upload size={18} />
-              Browse Files
-            </button>
-          </div>
-        </div>
-        
-        {/* Action Buttons */}
-        {(capturedImage || selectedImage) && (
-          <div className="bg-white p-4 rounded-lg border border-blue-300 shadow-md">
-            <div className="flex gap-4">
-              <button
-                onClick={resetImages}
-                className="flex-1 py-3 px-4 bg-blue-50 text-blue-800 font-medium rounded-lg hover:bg-blue-100 transition-all border border-blue-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="flex-1 py-3 px-4 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <Check size={18} />
-                    Analyze Image
-                  </>
-                )}
-              </button>
             </div>
           </div>
+        ) : (
+          <div className="mb-4">
+            {(capturedImage || selectedImage) ? (
+              <div className="relative">
+                <img
+                  src={capturedImage || selectedImage}
+                  alt="Selected product"
+                  className="w-full h-48 object-contain bg-gray-100 rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={resetImages}
+                  className="absolute top-2 right-2 bg-white p-1 rounded-full text-gray-600 shadow-sm hover:bg-gray-100"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col md:flex-row gap-4">
+                <button
+                  type="button"
+                  onClick={() => setShowCamera(true)}
+                  className="flex-1 py-3 flex items-center justify-center gap-2 bg-blue-50 text-blue-600 rounded-lg border border-blue-200 hover:bg-blue-100"
+                >
+                  <Camera size={20} />
+                  Open Camera
+                </button>
+                
+                <div className="flex-1">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={triggerFileInput}
+                    className="w-full py-3 flex items-center justify-center gap-2 bg-gray-100 text-gray-700 rounded-lg border border-gray-200 hover:bg-gray-200"
+                  >
+                    <Upload size={20} />
+                    Upload Image
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         )}
-      </div>
-      
-      {/* Status Info */}
-      <div className="w-full max-w-md mt-4">
-        <p className="text-blue-600 text-sm text-center">
-          Position your product in the center of the frame for best results
-        </p>
-      </div>
+        
+        {/* Product Information */}
+        {!showCamera && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="flex items-center gap-2">
+                  <ShoppingBag size={16} />
+                  Product Name*
+                </div>
+              </label>
+              <input
+                type="text"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Enter product name"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="flex items-center gap-2">
+                  <Package2 size={16} />
+                  Net Weight*
+                </div>
+              </label>
+              <input
+                type="text"
+                value={netWeight}
+                onChange={(e) => setNetWeight(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="e.g. 250g, 1kg"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="flex items-center gap-2">
+                  <Globe size={16} />
+                  Country of Origin
+                </div>
+              </label>
+              <select
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="India">India</option>
+                <option value="United States">United States</option>
+                <option value="China">China</option>
+                <option value="Japan">Japan</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading || (!capturedImage && !selectedImage) || !productName || !netWeight}
+              className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Check size={20} />
+                  Submit Product
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </form>
     </div>
   );
 };
