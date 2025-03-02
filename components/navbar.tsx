@@ -16,7 +16,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: "Dashboard", icon: <HomeIcon className="h-5 w-5" />, path: "/" },
-    { name: "Scan Product", icon: <LucideCamera className="h-5 w-5" />, path: "/scan-product" },
+    // { name: "Scan Product", icon: <LucideCamera className="h-5 w-5" />, path: "/scan-product" },
     {
       name: "History",
       icon: <ClockIcon className="h-5 w-5" />,
