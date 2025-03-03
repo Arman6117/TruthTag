@@ -4,16 +4,16 @@ import { Shield, ShieldAlert, AlertTriangle, Info, CheckCircle, ExternalLink, Ch
 
 interface ProductReportProps {
   productData: {
-    productName: string;
-    netWeight: string;
-    country: string;
-    scanDate: string;
-    healthScore: number;
-    healthRisks: string[];
-    consumptionFrequency: string;
-    alternatives: string[];
-    ageSuitability: string;
-    warningLabels: string[];
+    productName?: string;
+    netWeight?: string;
+    country?: string;
+    scanDate?: string;
+    healthScore?: number;
+    healthRisks?: string[];
+    consumptionFrequency?: string;
+    alternatives?: string[];
+    ageSuitability?: string;
+    warningLabels?: string[];
   } | null;
   isLoading: boolean;
 }
@@ -97,7 +97,7 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
       <div className="p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Health Risks</h3>
         <ul className="list-disc list-inside text-sm text-gray-600">
-          {productData.healthRisks.map((risk, index) => (
+          {productData.healthRisks!.map((risk, index) => (
             <li key={index}>{risk}</li>
           ))}
         </ul>
@@ -113,7 +113,7 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
       <div className="p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Better Alternatives</h3>
         <ul className="list-disc list-inside text-sm text-gray-600">
-          {productData.alternatives.map((alternative, index) => (
+          {productData.alternatives!.map((alternative, index) => (
             <li key={index}>{alternative}</li>
           ))}
         </ul>
@@ -129,7 +129,7 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
       <div className="p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Warning Labels</h3>
         <ul className="list-disc list-inside text-sm text-gray-600">
-          {productData.warningLabels.map((warning, index) => (
+          {productData.warningLabels!.map((warning, index) => (
             <li key={index}>{warning}</li>
           ))}
         </ul>

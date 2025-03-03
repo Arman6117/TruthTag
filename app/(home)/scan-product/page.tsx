@@ -6,7 +6,7 @@ import { HealthReport, analyzeImage } from "@/actions";
 
 interface ProductData {
   productName: string;
-  scanDate: string;
+  // scanDate: string;
   healthScore?: number;
   healthRisks?: string[];
   consumptionFrequency?: string;
@@ -98,7 +98,7 @@ const ProductScannerPage: React.FC = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-800">{productName}</p>
+                    <p className="font-medium text-gray-800">{productData.productName}</p>
                     <p className="text-xs text-gray-500">{productData.scanDate}</p>
                   </div>
                   <div className="ml-auto">
@@ -106,7 +106,7 @@ const ProductScannerPage: React.FC = () => {
                       productData.healthScore! >= 80 ? 'bg-green-100 text-green-800' : 
                       productData.healthScore! >= 60 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'
                     }`}>
-                      {productData.safetyScore}/100
+                      {productData.healthScore}/100
                     </span>
                   </div>
                 </div>
