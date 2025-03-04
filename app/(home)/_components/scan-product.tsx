@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
-import { Camera, Upload, X, Check, Loader2, Globe, Package2, ShoppingBag } from "lucide-react";
+import { Camera, Upload, X, Check, Loader2 } from "lucide-react";
 
 interface ScanProductProps {
   onSubmit?: (data: {
