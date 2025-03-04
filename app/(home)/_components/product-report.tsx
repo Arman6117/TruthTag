@@ -8,6 +8,7 @@ import {
   Flag,
   Bookmark,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductReportProps {
   productData: {
@@ -23,13 +24,13 @@ interface ProductReportProps {
     warningLabels?: string[];
   } | null;
   isLoading: boolean;
-  date:string
+  date: string;
 }
 
 const ProductReport: React.FC<ProductReportProps> = ({
   productData,
   isLoading,
-  date
+  date,
 }) => {
   if (isLoading) {
     return (
@@ -147,17 +148,16 @@ const ProductReport: React.FC<ProductReportProps> = ({
         <p className="text-sm text-gray-600">{productData.ageSuitability}</p>
       </div>
 
-      {/* Warning Labels */}
       <div className="p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Warning Labels</h3>
         <ul className="list-disc list-inside text-sm text-gray-600">
           {productData.warningLabels!.map((warning, index) => (
-            <li key={index}>{warning}</li>
+            <Badge key={index} className="bg-destructive mt-2">
+              {warning}
+            </Badge>
           ))}
         </ul>
       </div>
-
-      {/* Share Report */}
       <div className="p-4 bg-gray-50 flex justify-end">
         <button className="text-sm text-blue-600 flex items-center gap-1">
           Share This Report

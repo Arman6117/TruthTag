@@ -59,10 +59,10 @@ const ProductScannerPage: React.FC = () => {
         Product Safety Scanner
       </h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left column - Scanner */}
+      
         <div className="lg:sticky lg:top-4 self-start">
           <ScanProduct onSubmit={handleProductSubmit} />
-          {/* Instructions card */}
+       
           <div className="bg-white rounded-xl shadow-md p-4 mt-4">
             <h3 className="font-semibold text-gray-700 mb-2">How to use</h3>
             <ol className="text-sm text-gray-600 space-y-2 pl-5 list-decimal">
@@ -73,7 +73,7 @@ const ProductScannerPage: React.FC = () => {
             </ol>
           </div>
         </div>
-        {/* Right column - Report */}
+    
         <div>
           {productData || isLoading ? (
             <ProductReport
