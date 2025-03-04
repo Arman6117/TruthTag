@@ -1,6 +1,13 @@
-'use client';
-import React from "react";
-import { Shield, ShieldAlert, AlertTriangle, Info, CheckCircle, ExternalLink, ChevronDown, User, Calendar, Flag, Bookmark } from "lucide-react";
+"use client";
+import React, { useState } from "react";
+import {
+  Shield,
+  ExternalLink,
+  User,
+  Calendar,
+  Flag,
+  Bookmark,
+} from "lucide-react";
 
 interface ProductReportProps {
   productData: {
@@ -16,9 +23,14 @@ interface ProductReportProps {
     warningLabels?: string[];
   } | null;
   isLoading: boolean;
+  date:string
 }
 
-const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading }) => {
+const ProductReport: React.FC<ProductReportProps> = ({
+  productData,
+  isLoading,
+  date
+}) => {
   if (isLoading) {
     return (
       <div className="w-full bg-white rounded-xl shadow-md p-6 animate-pulse">
@@ -54,7 +66,9 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
 
       {/* Product Details */}
       <div className="border-b border-gray-100 p-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">{productData.productName}</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          {productData.productName}
+        </h3>
         <div className="grid grid-cols-2 gap-3 mb-3">
           <div className="flex items-start gap-2">
             <Flag size={16} className="text-gray-500" />
@@ -81,7 +95,7 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
             <Calendar size={16} className="text-gray-500" />
             <div>
               <p className="text-xs text-gray-500">Scan Date</p>
-              <p className="text-sm font-medium">{productData.scanDate}</p>
+              <p className="text-sm font-medium">{date}</p>
             </div>
           </div>
         </div>
@@ -90,7 +104,9 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
       {/* Health Score */}
       <div className="p-4 border-b border-gray-100 bg-blue-50">
         <h3 className="text-sm font-semibold text-gray-700">Health Score</h3>
-        <div className="text-2xl font-bold text-blue-600">{productData.healthScore}/100</div>
+        <div className="text-2xl font-bold text-blue-600">
+          {productData.healthScore}/100
+        </div>
       </div>
 
       {/* Health Risks */}
@@ -105,13 +121,19 @@ const ProductReport: React.FC<ProductReportProps> = ({ productData, isLoading })
 
       {/* Consumption Frequency */}
       <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">Recommended Consumption Frequency</h3>
-        <p className="text-sm text-gray-600">{productData.consumptionFrequency}</p>
+        <h3 className="text-sm font-semibold text-gray-700">
+          Recommended Consumption Frequency
+        </h3>
+        <p className="text-sm text-gray-600">
+          {productData.consumptionFrequency}
+        </p>
       </div>
 
       {/* Alternatives */}
       <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">Better Alternatives</h3>
+        <h3 className="text-sm font-semibold text-gray-700">
+          Better Alternatives
+        </h3>
         <ul className="list-disc list-inside text-sm text-gray-600">
           {productData.alternatives!.map((alternative, index) => (
             <li key={index}>{alternative}</li>

@@ -6,10 +6,10 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export interface HealthReport {
-  productName?:string,
-  netWeight?:string,
-  scanDate?:string,
-  country?:string
+  productName?: string;
+  netWeight?: string;
+  scanDate?: string;
+  country?: string;
   extractedText?: string;
   healthScore?: number;
   healthRisks?: string[];
@@ -22,7 +22,6 @@ export interface HealthReport {
 
 export async function analyzeImage(formData: FormData): Promise<HealthReport> {
   try {
-    
     const productName =
       (formData.get("productName") as string) || "Unnamed Product";
     const netWeight = (formData.get("netWeight") as string) || "Not specified";
@@ -47,7 +46,6 @@ export async function analyzeImage(formData: FormData): Promise<HealthReport> {
         "productName":"Name of the product",
         "netWeight":"Net weight of the product",
         "country":"Country entered by user",
-        "scanDate":"Current date"
           "extractedText": "All text on packaging",
           "healthScore": Number (0-100, higher is healthier),
           "healthRisks": ["Risk 1", "Risk 2"],
@@ -61,7 +59,6 @@ export async function analyzeImage(formData: FormData): Promise<HealthReport> {
       },
     ]);
 
-  
     const textResponse = await result.response.text();
     const jsonMatch = textResponse.match(/```(?:json)?([\s\S]*?)```/);
     const jsonString = jsonMatch ? jsonMatch[1].trim() : textResponse;
