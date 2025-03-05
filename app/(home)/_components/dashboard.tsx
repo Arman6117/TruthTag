@@ -10,6 +10,7 @@ import {
 import DashBoardCard from "./dashboard-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import dbConnect from "@/lib/db";
 
 // Assuming DashboardCard is a simple wrapper component
 // const DashBoardCard = ({ children, className }) => {
@@ -20,8 +21,10 @@ import Link from "next/link";
 //   );
 // };
 
-const Dashboard = () => {
+const Dashboard = async() => {
   // Sample recent scans data
+  await dbConnect().then(()=> console.log("COnnected"))
+// console.log(res)
   const recentScans = [
     { id: 1, name: "Organic Apple Juice", date: "Mar 1, 2025", status: "safe" },
     {

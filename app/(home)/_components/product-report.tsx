@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import dbConnect from "@/lib/db";
 interface ProductReportProps {
   productData: {
     productName?: string;
@@ -26,12 +27,15 @@ interface ProductReportProps {
   date: string;
 }
 
-const ProductReport: React.FC<ProductReportProps> = ({
+const ProductReport: React.FC<ProductReportProps> = async({
   productData,
   isLoading,
   date,
 }) => {
+
+
   if (isLoading) {
+  
     return (
       <div className="w-full bg-white rounded-xl shadow-md p-6 animate-pulse">
         <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
