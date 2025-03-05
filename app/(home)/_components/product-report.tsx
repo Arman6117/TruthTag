@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Shield,
   ExternalLink,
@@ -9,7 +8,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
+import { cn } from "@/lib/utils";
 interface ProductReportProps {
   productData: {
     productName?: string;
@@ -105,7 +104,15 @@ const ProductReport: React.FC<ProductReportProps> = ({
       {/* Health Score */}
       <div className="p-4 border-b border-gray-100 bg-blue-50">
         <h3 className="text-sm font-semibold text-gray-700">Health Score</h3>
-        <div className="text-2xl font-bold text-blue-600">
+        <div
+          className={cn(
+            "text-2xl font-bold ",
+            productData.healthScore! >= 70
+              ? "text-green-500"
+              : "text-amber-500",
+            productData.healthScore! <= 60 ? "text-red-500" : "text-amber-500"
+          )}
+        >
           {productData.healthScore}/100
         </div>
       </div>
@@ -150,13 +157,13 @@ const ProductReport: React.FC<ProductReportProps> = ({
 
       <div className="p-4 border-b border-gray-100">
         <h3 className="text-sm font-semibold text-gray-700">Warning Labels</h3>
-        <ul className="list-disc list-inside text-sm text-gray-600">
+        <div className="flex gap-4 cursor-pointer  text-sm text-gray-600">
           {productData.warningLabels!.map((warning, index) => (
             <Badge key={index} className="bg-destructive mt-2">
               {warning}
             </Badge>
           ))}
-        </ul>
+        </div>
       </div>
       <div className="p-4 bg-gray-50 flex justify-end">
         <button className="text-sm text-blue-600 flex items-center gap-1">
