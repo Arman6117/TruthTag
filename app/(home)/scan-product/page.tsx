@@ -5,17 +5,6 @@ import ProductReport from "../_components/product-report";
 import { HealthReport, analyzeImage } from "@/actions";
 import Placeholder from "../_components/placeholder";
 
-interface ProductData {
-  productName: string;
-  // scanDate: string;
-  healthScore?: number;
-  healthRisks?: string[];
-  consumptionFrequency?: string;
-  alternatives?: string[];
-  ageSuitability?: string;
-  warningLabels?: string[];
-}
-
 const ProductScannerPage: React.FC = () => {
   const [productData, setProductData] = useState<HealthReport | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,13 +19,12 @@ const ProductScannerPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Convert object data to FormData manually
       const data = new FormData();
       data.append("productName", formData.productName);
       data.append("netWeight", formData.netWeight);
       data.append("country", formData.country);
 
-      // Convert base64 image to Blob
+
       const blob = await fetch(formData.image).then((res) => res.blob());
       data.append("file", blob, "image.jpg");
 
@@ -84,7 +72,7 @@ const ProductScannerPage: React.FC = () => {
           ) : (
             <Placeholder />
           )}
-          {/* Recently scanned products */}
+
           {!isLoading && (
             <div className="mt-6 bg-white rounded-xl shadow-md p-4">
               <h3 className="font-semibold text-gray-700 mb-3">
