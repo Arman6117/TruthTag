@@ -119,3 +119,20 @@
     @apply bg-background text-foreground px-10 py-5 relative h-screen w-screen;
   }
 }
+ 
+.cl-userButtonBox {
+  border-radius: 18px;
+  width: 100px;
+}
+.cl-avatarBox {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+
+
+.cl-avatarImage {
+  width: 30px;
+  height:30px;
+}

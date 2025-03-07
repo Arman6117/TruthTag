@@ -4,6 +4,7 @@ import Logo from "./logo";
 import SearchInput from "./search-input";
 import UserAvatar from "./user-avatar";
 import Navbar from "./navbar";
+import { UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   return (
@@ -13,6 +14,7 @@ const Header = () => {
         <div className="flex gap-2 items-center">
           <SearchInput />
         </div>
+       
         <UserAvatar />
       </div>
 

@@ -1,8 +1,11 @@
+import { UserButton } from '@clerk/nextjs'
 import React from 'react'
 
 const UserAvatar = () => {
   return (
-    <div>UserAvatar from clerk</div>
+    <div className='flex justify-center items-center'>
+      <UserButton appearance={{}}/>
+    </div>
   )
 }
 
