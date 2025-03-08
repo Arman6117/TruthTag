@@ -6,10 +6,15 @@ import {
   Calendar,
   Flag,
   Bookmark,
+  AlertTriangle,
+  Leaf,
+  Clock,
+  ArrowUpRight,
+  Share2
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import dbConnect from "@/lib/db";
+
 interface ProductReportProps {
   productData: {
     productName?: string;
@@ -32,10 +37,7 @@ const ProductReport: React.FC<ProductReportProps> = ({
   isLoading,
   date,
 }) => {
-
-
   if (isLoading) {
-  
     return (
       <div className="w-full bg-white rounded-xl shadow-md p-6 animate-pulse">
         <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
@@ -53,126 +55,213 @@ const ProductReport: React.FC<ProductReportProps> = ({
   if (!productData) {
     return (
       <div className="w-full bg-white rounded-xl shadow-md p-6 text-center text-gray-500">
-        No product data available.
+        <AlertTriangle className="mx-auto mb-4 text-amber-500" size={32} />
+        <p className="font-medium">No product data available.</p>
+        <p className="text-sm mt-2">Try scanning another product or check your connection.</p>
       </div>
     );
   }
 
+  // Helper function to determine health score color and text
+  const getHealthScoreInfo = (score: number) => {
+    if (score >= 80) {
+      return { 
+        color: "text-green-600", 
+        bg: "bg-green-50", 
+        text: "Excellent" 
+      };
+    } else if (score >= 60) {
+      return { 
+        color: "text-amber-600", 
+        bg: "bg-amber-50", 
+        text: "Average" 
+      };
+    } else {
+      return { 
+        color: "text-red-600", 
+        bg: "bg-red-50", 
+        text: "Poor" 
+      };
+    }
+  };
+
+  const scoreInfo = getHealthScoreInfo(productData.healthScore || 0);
+
   return (
-    <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="w-full bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <Shield size={20} />
-          Product Analysis Report
-        </h2>
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-5">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold flex items-center gap-2">
+            <Shield size={22} className="text-blue-200" />
+            Product Analysis Report
+          </h2>
+          <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
+            {date}
+          </span>
+        </div>
+        <p className="text-blue-100 text-sm mt-1">
+          Health analysis and recommendations
+        </p>
       </div>
 
       {/* Product Details */}
-      <div className="border-b border-gray-100 p-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+      <div className="p-5 border-b border-gray-100">
+        <h3 className="text-xl font-bold text-gray-800 mb-3">
           {productData.productName}
         </h3>
-        <div className="grid grid-cols-2 gap-3 mb-3">
-          <div className="flex items-start gap-2">
-            <Flag size={16} className="text-gray-500" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-start gap-3">
+            <div className="bg-blue-50 p-2 rounded-lg">
+              <Flag size={18} className="text-blue-600" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Country</p>
-              <p className="text-sm font-medium">{productData.country}</p>
+              <p className="text-xs font-medium text-gray-500">Origin</p>
+              <p className="text-sm font-semibold">{productData.country}</p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
-            <Bookmark size={16} className="text-gray-500" />
+          <div className="flex items-start gap-3">
+            <div className="bg-blue-50 p-2 rounded-lg">
+              <Bookmark size={18} className="text-blue-600" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Net Weight</p>
-              <p className="text-sm font-medium">{productData.netWeight}</p>
+              <p className="text-xs font-medium text-gray-500">Net Weight</p>
+              <p className="text-sm font-semibold">{productData.netWeight}</p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
-            <User size={16} className="text-gray-500" />
+          <div className="flex items-start gap-3">
+            <div className="bg-blue-50 p-2 rounded-lg">
+              <User size={18} className="text-blue-600" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Scanned By</p>
-              <p className="text-sm font-medium">You</p>
+              <p className="text-xs font-medium text-gray-500">Scanned By</p>
+              <p className="text-sm font-semibold">You</p>
             </div>
           </div>
-          <div className="flex items-start gap-2">
-            <Calendar size={16} className="text-gray-500" />
+          <div className="flex items-start gap-3">
+            <div className="bg-blue-50 p-2 rounded-lg">
+              <Calendar size={18} className="text-blue-600" />
+            </div>
             <div>
-              <p className="text-xs text-gray-500">Scan Date</p>
-              <p className="text-sm font-medium">{date}</p>
+              <p className="text-xs font-medium text-gray-500">Scan Date</p>
+              <p className="text-sm font-semibold">{date}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Health Score */}
-      <div className="p-4 border-b border-gray-100 bg-blue-50">
-        <h3 className="text-sm font-semibold text-gray-700">Health Score</h3>
-        <div
-          className={cn(
-            "text-2xl font-bold ",
-            productData.healthScore! >= 70
-              ? "text-green-500"
-              : "text-amber-500",
-            productData.healthScore! < 60 ? "text-red-500" : "text-amber-500"
-          )}
-        >
-          {productData.healthScore}/100
+      <div className={cn("p-5 border-b border-gray-100", scoreInfo.bg)}>
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-700">Health Score</h3>
+            <div className="flex items-baseline gap-2">
+              <span className={cn("text-3xl font-bold", scoreInfo.color)}>
+                {productData.healthScore}
+              </span>
+              <span className="text-gray-500 text-sm">/100</span>
+            </div>
+          </div>
+          <div className={cn("px-4 py-2 rounded-full", scoreInfo.bg, scoreInfo.color, "border border-current")}>
+            <span className="font-semibold">{scoreInfo.text}</span>
+          </div>
         </div>
       </div>
 
       {/* Health Risks */}
-      <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">Health Risks</h3>
-        <ul className="list-disc list-inside text-sm text-gray-600">
-          {productData.healthRisks!.map((risk, index) => (
-            <li key={index}>{risk}</li>
-          ))}
-        </ul>
+      <div className="p-5 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle size={18} className="text-amber-500" />
+          <h3 className="text-sm font-semibold text-gray-700">Potential Health Risks</h3>
+        </div>
+        {productData.healthRisks && productData.healthRisks.length > 0 ? (
+          <ul className="space-y-2">
+            {productData.healthRisks.map((risk, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className="text-red-500 text-lg leading-none mt-0.5">•</span>
+                <span className="text-sm text-gray-600">{risk}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No significant health risks identified.</p>
+        )}
       </div>
 
       {/* Consumption Frequency */}
-      <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">
-          Recommended Consumption Frequency
-        </h3>
-        <p className="text-sm text-gray-600">
+      <div className="p-5 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <Clock size={18} className="text-blue-600" />
+          <h3 className="text-sm font-semibold text-gray-700">
+            Recommended Consumption
+          </h3>
+        </div>
+        <p className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
           {productData.consumptionFrequency}
         </p>
       </div>
 
       {/* Alternatives */}
-      <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">
-          Better Alternatives
-        </h3>
-        <ul className="list-disc list-inside text-sm text-gray-600">
-          {productData.alternatives!.map((alternative, index) => (
-            <li key={index}>{alternative}</li>
-          ))}
-        </ul>
+      <div className="p-5 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <Leaf size={18} className="text-green-600" />
+          <h3 className="text-sm font-semibold text-gray-700">
+            Healthier Alternatives
+          </h3>
+        </div>
+        {productData.alternatives && productData.alternatives.length > 0 ? (
+          <ul className="grid grid-cols-1 gap-2">
+            {productData.alternatives.map((alternative, index) => (
+              <li key={index} className="flex items-center gap-2 bg-green-50 p-3 rounded-lg">
+                <ArrowUpRight size={14} className="text-green-600" />
+                <span className="text-sm font-medium text-gray-700">{alternative}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No alternatives suggested.</p>
+        )}
       </div>
 
       {/* Age Suitability */}
-      <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">Age Suitability</h3>
-        <p className="text-sm text-gray-600">{productData.ageSuitability}</p>
-      </div>
-
-      <div className="p-4 border-b border-gray-100">
-        <h3 className="text-sm font-semibold text-gray-700">Warning Labels</h3>
-        <div className="flex gap-4 cursor-pointer  text-sm text-gray-600">
-          {productData.warningLabels!.map((warning, index) => (
-            <Badge key={index} className="bg-destructive mt-2">
-              {warning}
-            </Badge>
-          ))}
+      <div className="p-5 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <User size={18} className="text-purple-600" />
+          <h3 className="text-sm font-semibold text-gray-700">Age Suitability</h3>
+        </div>
+        <div className="bg-purple-50 p-3 rounded-lg">
+          <p className="text-sm font-medium text-gray-700">{productData.ageSuitability}</p>
         </div>
       </div>
-      <div className="p-4 bg-gray-50 flex justify-end">
-        <button className="text-sm text-blue-600 flex items-center gap-1">
-          Share This Report
-          <ExternalLink size={14} />
+
+      {/* Warning Labels */}
+      <div className="p-5 border-b border-gray-100">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle size={18} className="text-red-500" />
+          <h3 className="text-sm font-semibold text-gray-700">Warning Labels</h3>
+        </div>
+        {productData.warningLabels && productData.warningLabels.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {productData.warningLabels.map((warning, index) => (
+              <Badge 
+                key={index} 
+                className="bg-red-100 text-red-700 hover:bg-red-200 px-3 py-1 text-xs font-medium"
+              >
+                {warning}
+              </Badge>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 italic">No warning labels present.</p>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="p-5 bg-gray-50 flex justify-between items-center">
+        <p className="text-xs text-gray-500">This report is for informational purposes only.</p>
+        <button className="text-sm text-blue-600 font-medium flex items-center gap-1 bg-white px-4 py-2 rounded-lg border border-blue-200 shadow-sm hover:bg-blue-50 transition-colors">
+          <Share2 size={16} />
+          Share Report
         </button>
       </div>
     </div>

@@ -1,7 +1,9 @@
 "use server";
 
 import connectToDB from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Report } from "@/models/report";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -23,6 +25,8 @@ export interface HealthReport {
 
 export async function analyzeImage(formData: FormData): Promise<HealthReport> {
   try {
+    const { userId } = await auth();
+    if (!userId) return { error: "User not authenticated" };
     const productName =
       (formData.get("productName") as string) || "Unnamed Product";
     const netWeight = (formData.get("netWeight") as string) || "Not specified";
@@ -61,13 +65,24 @@ export async function analyzeImage(formData: FormData): Promise<HealthReport> {
     ]);
 
     const textResponse = await result.response.text();
-    
+
     const jsonMatch = textResponse.match(/```(?:json)?([\s\S]*?)```/);
     const jsonString = jsonMatch ? jsonMatch[1].trim() : textResponse;
-    return JSON.parse(jsonString);
+    const parsedReport = JSON.parse(jsonString);
+
+    await connectToDB();
+
+    const newReport = new Report({
+      userId,
+      productName,
+      netWeight,
+      country,
+      ...parsedReport,
+    });
+    await newReport.save();
+    return parsedReport;
   } catch (error) {
     console.error("Gemini API Error:", error);
     return { error: "Failed to analyze image" };
   }
 }
-
