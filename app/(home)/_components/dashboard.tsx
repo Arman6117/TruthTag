@@ -21,9 +21,9 @@ import dbConnect from "@/lib/db";
 //   );
 // };
 
-const Dashboard = async() => {
+const Dashboard = () => {
   // Sample recent scans data
-  await dbConnect().then(()=> console.log("COnnected"))
+  // await dbConnect().then(()=> console.log("COnnected"))
 // console.log(res)
   const recentScans = [
     { id: 1, name: "Organic Apple Juice", date: "Mar 1, 2025", status: "safe" },

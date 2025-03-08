@@ -5,8 +5,10 @@ import SearchInput from "./search-input";
 import UserAvatar from "./user-avatar";
 import Navbar from "./navbar";
 import { UserButton } from "@clerk/nextjs";
+import connectToDB from "@/lib/db";
 
 const Header = () => {
+ 
   return (
     <div className="flex flex-col gap-5 ">
       <div className="flex w-full justify-between">

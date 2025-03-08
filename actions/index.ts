@@ -1,5 +1,6 @@
 "use server";
 
+import connectToDB from "@/lib/db";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY!);
@@ -60,6 +61,7 @@ export async function analyzeImage(formData: FormData): Promise<HealthReport> {
     ]);
 
     const textResponse = await result.response.text();
+    
     const jsonMatch = textResponse.match(/```(?:json)?([\s\S]*?)```/);
     const jsonString = jsonMatch ? jsonMatch[1].trim() : textResponse;
     return JSON.parse(jsonString);
@@ -68,3 +70,4 @@ export async function analyzeImage(formData: FormData): Promise<HealthReport> {
     return { error: "Failed to analyze image" };
   }
 }
+

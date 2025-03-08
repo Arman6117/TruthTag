@@ -27,7 +27,7 @@ interface ProductReportProps {
   date: string;
 }
 
-const ProductReport: React.FC<ProductReportProps> = async({
+const ProductReport: React.FC<ProductReportProps> = ({
   productData,
   isLoading,
   date,
@@ -114,7 +114,7 @@ const ProductReport: React.FC<ProductReportProps> = async({
             productData.healthScore! >= 70
               ? "text-green-500"
               : "text-amber-500",
-            productData.healthScore! <= 60 ? "text-red-500" : "text-amber-500"
+            productData.healthScore! < 60 ? "text-red-500" : "text-amber-500"
           )}
         >
           {productData.healthScore}/100
