@@ -42,7 +42,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onSubmit }) => {
     netWeight?: string;
   }>({});
 
-  // Common countries list
+
   const countries = [
     "India", 
     "United States", 
@@ -82,7 +82,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onSubmit }) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Check file size (limit to 5MB)
+
       if (file.size > 5 * 1024 * 1024) {
         setFormErrors(prev => ({ ...prev, image: "Image size should be less than 5MB" }));
         return;
