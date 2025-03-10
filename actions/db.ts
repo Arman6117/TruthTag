@@ -1,13 +1,21 @@
 'use server'
 
 import dbConnect from "@/lib/db"
-import { HealthReport } from "."
+import { Report } from "@/models/report";
+import { auth } from "@clerk/nextjs/server"
 
-export const addReport = async(report:HealthReport) => {
+export const getAllUserReport = async() => {
     try {
-        const db = await dbConnect()
-        
+        const {userId}  = await auth();
+        if(!userId) {
+            return {message:"Unauthorized"}
+        }
+        await dbConnect()
+        const report = await Report.find({userId});
+        console.log(report)
+
+    
     } catch (error) {
-        
+        console.log(error)
     }
 }
