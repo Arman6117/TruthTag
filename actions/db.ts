@@ -12,7 +12,7 @@ export const getAllUserReport = async() => {
         }
         await dbConnect()
         const report = await Report.find({userId});
-        console.log(report)
+
 
         return report;
     } catch (error) {
