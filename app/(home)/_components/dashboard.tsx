@@ -11,6 +11,7 @@ import DashBoardCard from "./dashboard-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dbConnect from "@/lib/db";
+import { getAllUserReport } from "@/actions/db";
 
 // Assuming DashboardCard is a simple wrapper component
 // const DashBoardCard = ({ children, className }) => {
@@ -21,22 +22,23 @@ import dbConnect from "@/lib/db";
 //   );
 // };
 
-const Dashboard = () => {
+const Dashboard =async () => {
   // Sample recent scans data
   // await dbConnect().then(()=> console.log("COnnected"))
 // console.log(res)
-  const recentScans = [
-    { id: 1, name: "Organic Apple Juice", date: "Mar 1, 2025", status: "safe" },
-    {
-      id: 2,
-      name: "Chocolate Cookies",
-      date: "Feb 28, 2025",
-      status: "unsafe",
-    },
-    { id: 3, name: "Almond Milk", date: "Feb 27, 2025", status: "safe" },
-    { id: 4, name: "Granola Bar", date: "Feb 26, 2025", status: "unsafe" },
-  ];
-
+  // const recentScans = [
+  //   { id: 1, name: "Organic Apple Juice", date: "Mar 1, 2025", status: "safe" },
+  //   {
+  //     id: 2,
+  //     name: "Chocolate Cookies",
+  //     date: "Feb 28, 2025",
+  //     status: "unsafe",
+  //   },
+  //   { id: 3, name: "Almond Milk", date: "Feb 27, 2025", status: "safe" },
+  //   { id: 4, name: "Granola Bar", date: "Feb 26, 2025", status: "unsafe" },
+  // ];
+const data = await getAllUserReport()
+console.log(data.data)
   return (
     <div className="flex flex-col gap-10 p-6">
       <div className="flex justify-between items-center">
@@ -133,9 +135,9 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {recentScans.map((scan) => (
+              {data.data?.map((scan) => (
                 <tr
-                  key={scan.id}
+                  key={scan._id as string}
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -144,14 +146,14 @@ const Dashboard = () => {
                         <Clock size={18} className="text-gray-500" />
                       </div>
                       <div className="text-sm font-medium text-gray-800">
-                        {scan.name}
+                        {scan.productName}
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {scan.date}
+                    {/* {scan.createdAt} */}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  {/* <td className="px-6 py-4 whitespace-nowrap">
                     {scan.status === "safe" ? (
                       <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800">
                         Safe
@@ -161,7 +163,7 @@ const Dashboard = () => {
                         Unsafe
                       </span>
                     )}
-                  </td>
+                  </td> */}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-800">
                       Details
@@ -174,9 +176,9 @@ const Dashboard = () => {
         </div>
 
         <div className="md:hidden">
-          {recentScans.map((scan) => (
+          {data.data?.map((scan) => (
             <div
-              key={scan.id}
+              key={scan._id as string}
               className="border-b border-gray-100 p-4 hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
@@ -186,13 +188,13 @@ const Dashboard = () => {
                   </div>
                   <div>
                     <div className="text-sm font-medium text-gray-800">
-                      {scan.name}
+                      {scan.productName}
                     </div>
                     <div className="text-xs text-gray-500">{scan.date}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  {scan.status === "safe" ? (
+                  {/* {scan.status === "safe" ? (
                     <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
                       Safe
                     </span>
@@ -200,7 +202,7 @@ const Dashboard = () => {
                     <span className="px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
                       Unsafe
                     </span>
-                  )}
+                  )} */}
                   <div className="relative">
                     <button className="p-1 rounded-full hover:bg-gray-100">
                       <MoreHorizontal size={16} className="text-gray-500" />
