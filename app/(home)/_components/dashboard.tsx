@@ -12,33 +12,33 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dbConnect from "@/lib/db";
 import { getAllUserReport } from "@/actions/db";
+import { cn } from "@/lib/utils";
 
-// Assuming DashboardCard is a simple wrapper component
-// const DashBoardCard = ({ children, className }) => {
-//   return (
-//     <div className={`p-6 flex-1 flex flex-col justify-between ${className}`}>
-//       {children}
-//     </div>
-//   );
-// };
+const getStatus = (score: number) => {
+  // console.log(score)
+  if (score >= 80) {
+    return {
+      color: "text-green-600",
 
-const Dashboard =async () => {
-  // Sample recent scans data
-  // await dbConnect().then(()=> console.log("COnnected"))
-// console.log(res)
-  // const recentScans = [
-  //   { id: 1, name: "Organic Apple Juice", date: "Mar 1, 2025", status: "safe" },
-  //   {
-  //     id: 2,
-  //     name: "Chocolate Cookies",
-  //     date: "Feb 28, 2025",
-  //     status: "unsafe",
-  //   },
-  //   { id: 3, name: "Almond Milk", date: "Feb 27, 2025", status: "safe" },
-  //   { id: 4, name: "Granola Bar", date: "Feb 26, 2025", status: "unsafe" },
-  // ];
-const data = await getAllUserReport()
-console.log(data.data)
+      text: "Safe",
+    };
+  } else if (score >= 60) {
+    return {
+      color: "text-amber-600",
+
+      text: "Average",
+    };
+  } else {
+    return {
+      color: "text-red-600",
+
+      text: "Poor",
+    };
+  }
+};
+const Dashboard = async () => {
+  const data = await getAllUserReport();
+  // console.log(data.data);
   return (
     <div className="flex flex-col gap-10 p-6">
       <div className="flex justify-between items-center">
@@ -55,22 +55,22 @@ console.log(data.data)
 
       <div className="flex flex-wrap md:flex-row flex-col gap-4">
         <DashBoardCard className="bg-blue-50 rounded-lg hover:shadow-md transition-all h-40">
-          <span className="text-5xl font-semibold text-blue-700">200</span>
+          <span className="text-5xl font-semibold text-blue-700">{data.data?.length}</span>
           <div>
             <h2 className="text-sm font-medium text-gray-600">
               Total Products Scanned
             </h2>
-            <div className="text-xs text-blue-600 mt-1 flex items-center">
+            {/* <div className="text-xs text-blue-600 mt-1 flex items-center">
               <ArrowUpRight size={14} />
               <span>12% from last month</span>
-            </div>
+            </div> */}
           </div>
         </DashBoardCard>
 
         <DashBoardCard className="bg-green-50 rounded-lg hover:shadow-md transition-all h-40">
           <div className="flex items-baseline">
             <span className="text-5xl font-semibold text-green-700">100</span>
-            <span className="text-sm text-green-600 ml-2">/200</span>
+            <span className="text-sm text-green-600 ml-2">/{data.data?.length}</span>
           </div>
           <div>
             <h2 className="text-sm font-medium text-gray-600">Safe Products</h2>
@@ -136,7 +136,6 @@ console.log(data.data)
             </thead>
             <tbody className="divide-y divide-gray-100">
               {data.data?.map((scan) => (
-              
                 <tr
                   key={scan._id as string}
                   className="hover:bg-gray-50 transition-colors"
@@ -152,20 +151,21 @@ console.log(data.data)
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {scan.createdAt.toString().split(' ').slice(1,4).join(' ')}
-                  
+                    {scan.createdAt.toString().split(" ").slice(1, 4).join(" ")}
                   </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap">
-                    {scan.status === "safe" ? (
-                      <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-green-100 text-green-800">
-                        Safe
-                      </span>
-                    ) : (
-                      <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-red-100 text-red-800">
-                        Unsafe
-                      </span>
-                    )}
-                  </td> */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {(() => {
+                      const status = getStatus(scan.healthScore);
+                      return (
+                        <span
+                          className={cn('px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg ', status.color)}
+                          
+                        >
+                          {status.text}
+                        </span>
+                      );
+                    })()}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button className="text-blue-600 hover:text-blue-800">
                       Details
