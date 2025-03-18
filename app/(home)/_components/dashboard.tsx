@@ -136,6 +136,7 @@ console.log(data.data)
             </thead>
             <tbody className="divide-y divide-gray-100">
               {data.data?.map((scan) => (
+              
                 <tr
                   key={scan._id as string}
                   className="hover:bg-gray-50 transition-colors"
@@ -151,7 +152,8 @@ console.log(data.data)
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {/* {scan.createdAt} */}
+                    {scan.createdAt.toString().split(' ').slice(1,4).join(' ')}
+                  
                   </td>
                   {/* <td className="px-6 py-4 whitespace-nowrap">
                     {scan.status === "safe" ? (
