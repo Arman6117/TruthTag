@@ -14,6 +14,7 @@ export const config = {
     // Protect the homepage route
     "/",
     "/scan-product",
+    "/history",
     // Always run for API routes
     "/(api|trpc)(.*)",
   ],
