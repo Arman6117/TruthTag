@@ -22,3 +22,21 @@ export const getAllUserReport = async () => {
         return { success: false, message: "An error occurred while fetching reports." };
     }
 };
+
+
+
+export async function getProductById(id:string | string[] | undefined) {
+  try {
+     await dbConnect();
+    const product = await Report.findById(id as any).lean();
+    
+    if (!product) {
+      return { error: "Product not found", data: null };
+    }
+    
+    return { data: product };
+  } catch (error) {
+    console.error("Database error:", error);
+    return { error: "Failed to fetch product data", data: null };
+  }
+}

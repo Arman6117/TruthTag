@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Shield,
-  ExternalLink,
   User,
   Calendar,
   Flag,

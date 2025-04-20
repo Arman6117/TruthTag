@@ -7,10 +7,10 @@ import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 
 import {
-  LucideCamera,
+
   HomeIcon,
   ClockIcon,
-  AwardIcon,
+
   MenuIcon,
   XIcon,
 } from "lucide-react";

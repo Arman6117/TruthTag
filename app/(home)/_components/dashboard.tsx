@@ -4,13 +4,11 @@ import {
   Clock,
   MoreHorizontal,
   AlertTriangle,
-  TrendingUp,
   ChartBar
 } from "lucide-react";
 import DashBoardCard from "./dashboard-card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import dbConnect from "@/lib/db";
 import { getAllUserReport } from "@/actions/db";
 import { cn } from "@/lib/utils";
 
@@ -37,19 +35,18 @@ const Dashboard = async () => {
   const data = await getAllUserReport();
   const products = data.data || [];
   
-  // Calculate dynamic statistics
+  
   const totalProducts = products.length;
   
-  // Count products by status
+  
   const safeProducts = products.filter(product => product.healthScore >= 80).length;
-  const averageProducts = products.filter(product => product.healthScore >= 60 && product.healthScore < 80).length;
   const poorProducts = products.filter(product => product.healthScore < 60).length;
   
-  // Calculate percentages
+
   const safePercentage = totalProducts > 0 ? (safeProducts / totalProducts) * 100 : 0;
   const poorPercentage = totalProducts > 0 ? (poorProducts / totalProducts) * 100 : 0;
   
-  // Calculate average health score
+  
   const averageHealthScore = totalProducts > 0 
     ? products.reduce((sum, product) => sum + product.healthScore, 0) / totalProducts 
     : 0;

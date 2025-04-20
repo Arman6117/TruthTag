@@ -1,6 +1,6 @@
-import { CameraIcon, ScanIcon } from "lucide-react";
+import { CameraIcon } from "lucide-react";
 import React from "react";
-import { Button } from "./ui/button";
+// import { Button } from "./ui/button";
 
 const Capture = () => {
   return (

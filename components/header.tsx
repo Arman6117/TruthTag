@@ -1,11 +1,9 @@
 import React from "react";
 
 import Logo from "./logo";
-import SearchInput from "./search-input";
 import UserAvatar from "./user-avatar";
 import Navbar from "./navbar";
-import { UserButton } from "@clerk/nextjs";
-import connectToDB from "@/lib/db";
+
 
 const Header = () => {
  
@@ -14,7 +12,7 @@ const Header = () => {
       <div className="flex w-full justify-between">
         <Logo />
         <div className="flex gap-2 items-center">
-          <SearchInput />
+          {/* <SearchInput /> */}
         </div>
        
         <UserAvatar />
